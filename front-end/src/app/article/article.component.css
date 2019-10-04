@@ -1,0 +1,6 @@
+.article .icon-button {
+    transition: all 0.2s ease-in-out;
+}
+.article .icon-button:hover {
+    transform: translateY(-2px) scale(1.2);
+}

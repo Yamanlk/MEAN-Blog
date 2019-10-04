@@ -1,0 +1,28 @@
+<app-page-not-found error-message="Unexpected error occurred" *ngIf="isError"></app-page-not-found>
+<mat-spinner *ngIf="!article && !isError" style="margin: auto"></mat-spinner>
+<div *ngIf="article && !isError" class="article">
+    <button mat-icon-button style="position: absolute; left: 20px;" onclick="window.history.back()">
+        <mat-icon>keyboard_backspace</mat-icon>
+    </button>
+    <h1 style="text-align: center">{{article.title}} </h1>
+    <h4 style="text-align: center; line-height: 0px; margin: 0px; padding: 0px;">By {{article.userId.firstname}}
+        {{article.userId.lastname}}</h4>
+    <section class='actions' style="margin: 10px auto; display: block; position: relative; width: fit-content;">
+        <button mat-icon-button class="icon-button">
+            <mat-icon onclick="alert('sharing')">reply</mat-icon>
+        </button>
+        <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu">
+            <mat-icon class="material-icons">error_outline</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+        </mat-menu>
+        <button mat-icon-button class="icon-button">
+            <mat-icon>favorite</mat-icon>
+        </button>
+    </section>
+    <mat-divider style="margin-top: 20px"></mat-divider>
+    <p style="margin: 0px 60px; text-justify: auto; text-align: justify">
+        {{article.content}}
+    </p>
+    <mat-divider></mat-divider>
+</div>

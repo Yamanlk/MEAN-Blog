@@ -1,0 +1,112 @@
+@media(max-width: 500px) {
+    .article {
+        width: 200px;
+        margin-left: 0px;
+        
+    }
+    .continue-reading {
+        left: 157px;
+    }
+}
+@media(min-width: 500px) {
+    .article {
+        width: 328px;
+        margin-left: 20px;
+    }
+    .continue-reading {
+        left: 285px;
+    }
+    .article .icon-button:hover {
+        transform: translateY(-2px) scale(1.2);
+    }
+}
+.article {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.article mat-card-content {
+    text-align: justify;
+    text-justify: auto;
+}
+
+.article mat-card-header {
+    margin: 25px 0px;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.article mat-card-actions {
+    display: flex;
+    flex-direction: row;
+}
+
+.article .icon-button{
+    transition: transform 0.2s ease-in-out;
+}
+
+.actions-right {
+    margin-left: auto;
+}
+
+.actions-left {
+    margin-right: auto;
+}
+
+
+mat-chip {
+    max-width: 500px;
+}
+
+.category {
+    max-width: 80px;
+    width: max-content;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    padding: 2.5px;
+    background-color: whitesmoke;
+    color: black;
+    overflow: hidden;
+    padding: 0px 7.5px;
+}
+
+.category {
+    margin-right: 10px;
+    width: 75px;
+}
+
+.category-etc {
+    margin-right: 10px;
+    width: 10px;
+}
+
+.category-tooltip {
+    background-color: gray;
+}
+
+.categories-list {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    margin-left: 16px;
+}
+
+.continue-reading {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    padding: 0px;
+    top: 0;
+}
+
+.continue-reading:hover {
+    cursor: pointer;
+}
+
+.continue-reading:active {
+    outline: none;
+}

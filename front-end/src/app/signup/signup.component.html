@@ -1,0 +1,124 @@
+<mat-tab-group>
+    <mat-tab label="Username">
+        <form #uf="ngForm" style="margin: 0px 25px" (submit)="submitUsername(uf.value)">
+            <mat-grid-list cols="2" rowHeight="100px" style='max-width: 500px; margin: 0px auto'>
+                <mat-grid-tile [colspan]=2>
+                    <h2 style="text-align: center">Signup Using Username</h2>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=1>
+                    <mat-form-field appearance="outline" style="margin-left: auto;">
+                        <mat-label>Firstname</mat-label>
+                        <input matInput type="text" ngModel name="firstname" #firstnameInput1="ngModel"
+                            [minlength]="globals.UserValidationGlobals.firstname.minLength"
+                            [maxLength]="globals.UserValidationGlobals.firstname.maxLength"
+                            [required]="globals.UserValidationGlobals.firstname.required"
+                            [pattern]="globals.UserValidationGlobals.firstname.onlyIncludeRegex">
+                        <mat-hint align="end">{{firstnameInput1.value?.length}}/{{20}}</mat-hint>
+                        <mat-error *ngIf="firstnameInput1.hasError('minlength')">Should be at least 2 letters
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=1>
+                    <mat-form-field style="margin-right: auto" appearance="outline">
+                        <mat-label>Lastname</mat-label>
+                        <input matInput type="text" ngModel name="lastname" #lastnameInput1="ngModel"
+                            [minlength]="globals.UserValidationGlobals.lastname.minLength"
+                            [maxLength]="globals.UserValidationGlobals.lastname.maxLength"
+                            [required]="globals.UserValidationGlobals.lastname.required"
+                            [pattern]="globals.UserValidationGlobals.lastname.onlyIncludeRegex">
+                        <mat-hint align="end">{{lastnameInput1.value?.length}}/{{20}}</mat-hint>
+                        <mat-error *ngIf="lastnameInput1.hasError('minlength')">Should be at least 2 letters</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=2>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input matInput type='text' ngModel name="username" #usernameInput="ngModel"
+                            [minlength]="globals.UserValidationGlobals.username.minLength"
+                            [maxLength]="globals.UserValidationGlobals.username.maxLength"
+                            [required]="globals.UserValidationGlobals.username.required"
+                            [pattern]="globals.UserValidationGlobals.username.onlyIncludeRegex">
+                        <mat-error *ngIf="usernameInput.hasError('minlength')">
+                            Should be at least 2 letters
+                        </mat-error>
+                        <mat-hint style="color: red" *ngIf="usernameError != ''">{{usernameError}}</mat-hint>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=2>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input matInput placeholder="password" type='password' ngModel name='password'
+                            #passwordInput1="ngModel" [minlength]="globals.UserValidationGlobals.password.minLength"
+                            [maxLength]="globals.UserValidationGlobals.password.maxLength"
+                            [required]="globals.UserValidationGlobals.password.required"
+                            [pattern]="globals.UserValidationGlobals.password.onlyIncludeRegex">
+                        <mat-error *ngIf="passwordInput1.hasError('required')">This field is required</mat-error>
+                        <mat-error *ngIf="passwordInput1.hasError('minlength')">Should be at least 8 letters</mat-error>
+                        <mat-hint style="color: red" *ngIf="passwordError != ''">{{passwordError}}</mat-hint>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=2>
+                    <button mat-raised-button color='primary' type='submit' [disabled]="!uf.valid"
+                        style="width: 100%">Submit</button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+    </mat-tab>
+    <mat-tab label="Email" disabled>
+        <form #ef="ngForm" style="margin: 0px 25px" (submit)="submitEmail(ef.value)">
+            <mat-grid-list cols="2" rowHeight="100px" style='max-width: 500px; margin: 0px auto'>
+                <mat-grid-tile [colspan]=2>
+                    <h2 style="text-align: center">Signup Using Email</h2>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=1>
+                    <mat-form-field style="margin-left: auto;">
+                        <input matInput placeholder="firstname" type="text" ngModel name="firstname"
+                            #firstnameInput2="ngModel" [minlength]="globals.UserValidationGlobals.firstname.minLength"
+                            [maxLength]="globals.UserValidationGlobals.firstname.maxLength"
+                            [required]="globals.UserValidationGlobals.firstname.required"
+                            [pattern]="globals.UserValidationGlobals.firstname.onlyIncludeRegex">
+                        <mat-hint align="end">{{firstnameInput2.value?.length}}/{{20}}</mat-hint>
+                        <mat-error *ngIf="firstnameInput2.hasError('pattern')">Don't use spaces or special characters
+                        </mat-error>
+                        <mat-error
+                            *ngIf="firstnameInput2.hasError('minlength') && !firstnameInput2.hasError('pattern')">Should
+                            be at least 2 letters</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=1>
+                    <mat-form-field style="margin-right: auto">
+                        <input matInput placeholder="lastname" type="text" ngModel name="lastname"
+                            #lastnameInput2="ngModel" [minlength]="globals.UserValidationGlobals.lastname.minLength"
+                            [maxLength]="globals.UserValidationGlobals.lastname.maxLength"
+                            [required]="globals.UserValidationGlobals.lastname.required"
+                            [pattern]="globals.UserValidationGlobals.lastname.onlyIncludeRegex">
+                        <mat-hint align="end">{{lastnameInput2.value?.length}}/{{20}}</mat-hint>
+                        <mat-error *ngIf="lastnameInput2.hasError('minlength')">Should be at least 2 letters</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=2>
+                    <mat-form-field>
+                        <input required matInput placeholder="email" email type='email' ngModel name="email"
+                            #emailInput="ngModel">
+                        <mat-error>Please enter a valid email address</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=2>
+                    <mat-form-field>
+                        <input matInput placeholder="password" type='password' ngModel name='password'
+                            #passwordInput2="ngModel" [minlength]="globals.UserValidationGlobals.password.minLength"
+                            [maxLength]="globals.UserValidationGlobals.password.maxLength"
+                            [required]="globals.UserValidationGlobals.password.required"
+                            [pattern]="globals.UserValidationGlobals.password.onlyIncludeRegex">
+                        <mat-error *ngIf="passwordInput2.hasError('required')">This field is required</mat-error>
+                        <mat-error *ngIf="passwordInput2.hasError('minlength')">Should be at least 8 letters</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]=2>
+                    <button mat-raised-button color='primary' type='submit' [disabled]="!ef.valid"
+                        style="width: 100%">Submit</button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+    </mat-tab>
+</mat-tab-group>

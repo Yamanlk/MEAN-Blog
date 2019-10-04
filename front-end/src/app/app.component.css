@@ -1,0 +1,28 @@
+@media(min-width: 500px) {
+    #nav-bar-menu-button {
+        display: none;
+    }
+    #nav-bar-buttons-right {
+        display: flex;
+        flex-direction: row;
+    }
+    #side-nav {
+        display: none;
+    }
+}
+
+@media(max-width: 500px) {
+    #nav-bar-menu-button {
+        display: block;
+    }
+    #nav-bar-buttons-right {
+        display: none;
+    }
+    #side-nav {
+        display: inline;
+    }
+}
+
+#page-top-logo:hover {
+    cursor: pointer;
+}

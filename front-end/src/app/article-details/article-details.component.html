@@ -1,0 +1,41 @@
+<mat-card class="article">
+    <div class="continue-reading" [routerLink]="['blog', article.id]">
+        <mat-icon class="material-icons" style="margin-left: 36px; margin-top: 15px;">keyboard_arrow_right</mat-icon>
+    </div>
+    <mat-card-header>
+        {{article.header}}
+    </mat-card-header>
+    <mat-card-content>
+        {{article.content}}
+    </mat-card-content>
+    <mat-divider [inset]="true"></mat-divider>
+    <mat-card-actions>
+        <section class="actions-left">
+            <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu">
+                <mat-icon class="material-icons">error_outline</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+            </mat-menu>
+        </section>
+
+        <section class="actions-right">
+            <button mat-icon-button class="icon-button" id="love" style="display: block" [ngStyle]="styles['loved']"
+                (click)="toggleLove()">
+                <mat-icon class="material-icons">favorite</mat-icon>
+            </button>
+        </section>
+
+    </mat-card-actions>
+    <mat-card-footer>
+        <section class="categories-list">
+            <div *ngFor="let cat of article.categories.slice(0,3)" matTooltip="{{cat}}"
+                matTooltipClass="category-tooltip" class="category">
+                {{cat}}
+            </div>
+            <div *ngIf="article.categories[3] != undefined" matTooltip="{{article.categories.slice(3).toString()}}" 
+                matTooltipClass="category-tooltip" class="category category-etc">
+                ...
+            </div>
+        </section>
+    </mat-card-footer>
+</mat-card>

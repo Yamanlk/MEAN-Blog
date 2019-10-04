@@ -1,0 +1,18 @@
+@media (max-width: 500px) {
+    .blog {
+        flex-flow: column nowrap;
+    }
+    .article {
+        margin: 0px auto;
+    }
+}
+@media (min-width: 500px) {
+    .blog {
+    flex-flow: row wrap;
+    }
+}
+.blog {
+    display: flex;
+    justify-content: center;
+    max-width: 95%;
+}

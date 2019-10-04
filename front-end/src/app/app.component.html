@@ -1,0 +1,55 @@
+<div style="display: flex; flex-direction: column; position: absolute; top: 0; bottom: 0; left: 0; right: 0;">
+  <mat-toolbar [color]='"primary"' style="padding-left: 0px; box-shadow: 0px 0px 5px 0px black; z-index: 2;">
+    <img [routerLink]="['']" src="../assets/JS-logo.png" style="width: 64px; margin-right: 0px;" id='page-top-logo'>
+    <p style="margin-top: auto; margin-left: 5px; margin-bottom: 0px; font-size: 25px;">Bloger</p>
+    <div id="nav-bar-buttons-right" style="margin-left: auto">
+      <a href="https://github.com/Yamanlk/MEAN-Blog" style="text-decoration: none; color: black;"><button mat-icon-button
+          style="margin-right: 10px">
+          <mat-icon class="im im-github"></mat-icon>
+        </button></a>
+      <button mat-flat-button color="primary" style="margin-right: 10px; margin-left: 10px"
+        [routerLink]="['auth/signup']" *ngIf="!authService.getUser()">SIGN UP</button>
+      <button mat-flat-button color="primary" style="margin-left: 10px" [routerLink]="['auth/signin']"
+        *ngIf="!authService.getUser()">SIGN IN</button>
+      <button mat-flat-button color="primary" [routerLink]="['']" style="margin-left: 10px;"
+        (click)="authService.logout()" *ngIf="authService.getUser()">LOGOUT</button>
+      <button mat-flat-button color='primary' *ngIf="authService.getUser()">
+        {{authService.getUser().firstname + ' ' + authService.getUser().lastname}}
+        <mat-icon class="im im-user-circle" style="font-size: 24px;padding: 5px; margin-left: 5px;"></mat-icon>
+      </button>
+    </div>
+    <button id="nav-bar-menu-button" mat-icon-button style="margin-left: auto" (click)="nav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar>
+  
+  
+  <mat-sidenav-container style="height: 100%">
+      <mat-sidenav id="side-nav" #nav mode="over" position="end" [fixedInViewport]="true" style="margin-top: 56px">
+          <mat-nav-list>
+            <mat-list-item *ngIf="authService.getUser()">
+              <mat-icon class="im im-user-circle" style="margin-right: 10px"></mat-icon> yaman lakis
+            </mat-list-item>
+            <mat-divider *ngIf="authService.getUser()"></mat-divider>
+            <mat-list-item>
+              <a style="text-decoration: none; color: black" href='https://github.com'>
+                <mat-icon class="im im-github" style="margin-right: 10px"></mat-icon>Open on Github
+              </a>
+            </mat-list-item>
+            <mat-list-item [routerLink]="['auth/signup']" *ngIf="!authService.getUser()">
+              <mat-icon class="im im-plus" style="margin-right: 10px;"></mat-icon> SIGN UP
+            </mat-list-item>
+            <mat-list-item [routerLink]="['auth/signin']" *ngIf="!authService.getUser()">
+              <mat-icon class="im im-sign-in" style="margin-right: 10px"></mat-icon> SIGN IN
+            </mat-list-item>
+            <mat-list-item [routerLink]="['']" (click)="authService.logout()" *ngIf="authService.getUser()">
+              <mat-icon class="im im-sign-out" style="margin-right: 10px"></mat-icon> LOGOUT
+            </mat-list-item>
+          </mat-nav-list>
+        </mat-sidenav>
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+        <div style="margin-top: auto; height: auto;"></div>
+      </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
