@@ -47,19 +47,20 @@ export class ForbiddenError extends BaseError {
     }
 }
 
-export class NoInternetConnectionError extends Error {
+export class NoInternetConnectionError extends BaseError {
     constructor() {
         super();
+        this.status = ErrorStatus.NoInternetConnection;
         this.name = "NoInternetConnection";
         this.message = "No internet connection";
     }
 }
 
 export enum ErrorStatus {
+    NoInternetConnection= 420,
     BadRequest= 400,
     Unauthorized= 401,
     Forbidden= 403,
     NotFound= 404,
     InvalidData= 422,
-
 }
