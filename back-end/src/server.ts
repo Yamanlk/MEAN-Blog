@@ -3,7 +3,6 @@ import * as mongoose from "mongoose";
 import * as jwt from "jsonwebtoken"
 import * as cookieParser from "cookie-parser"
 import * as path from "path"
-import * as cors from "cors"
 
 import { Env } from "./config/config"
 import { router } from "./routes/index"
@@ -29,9 +28,6 @@ db.once('open', () => {
 });
 
 const app = express();
-app.use(cors({
-    methods: ["GET", "POST", "DELETE", "PUT"]
-}))
 app.use(express.static(path.join(__dirname, 'view')))
 app.use(expressJsonParser);
 app.use(expressUrlencodedParser);
