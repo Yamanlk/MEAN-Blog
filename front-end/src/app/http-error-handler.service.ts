@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, of, EMPTY } from 'rxjs';
-import { map, catchError } from "rxjs/operators"
+import { map, catchError, retryWhen, take } from "rxjs/operators"
 import { NotificationService } from './notification.service';
-import { NoInternetConnectionError, BaseError, ErrorStatus } from 'shared'
+import { ERRORS } from 'shared'
 import { Router } from '@angular/router';
 
 
@@ -12,44 +12,80 @@ export class HttpErrorHandlerService implements HttpInterceptor {
 
   constructor(private notificationService: NotificationService, private router: Router) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    let tries = 3;
+    let delay = 1000;
+
     return next.handle(req).pipe(
       map(evnt => {
-        if (navigator.onLine === false) throw new HttpErrorResponse({ error: new NoInternetConnectionError, status: ErrorStatus.NoInternetConnection });
-        else return evnt;
+        if (navigator.onLine === false) { throw new Error("No internet connection"); }
+        else { return evnt; }
       }),
-      catchError((httpResponseError, caught) => {
-        return this.handleError(httpResponseError);
+      retryWhen((errors) => {
+        return errors.pipe(
+          map(error => {
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === ERRORS.BadRequest.status || error.status === 0) {
+                return;
+              } else if (tries === 0) {
+                throw error;
+              } else {
+                return;
+              };
+            } else return;
+          })
+        )
+      }),
+      catchError((error, caught) => {
+        if (error instanceof Error) {
+          this.notificationService.addNotification(error.message);
+          return EMPTY;
+        }
+        else if (error instanceof HttpErrorResponse) { return this.handleError(error); }
       })
     )
   }
 
   private handleError(httpError: HttpErrorResponse): Observable<any> {
-    if (httpError.status === 422 && httpError.error.hasOwnProperty("extraInfo")) return this.handleInvalidData(httpError.error.extraInfo);
-    else if(httpError.status === 0) {
-      this.notificationService.addNotification("Unexpected error occurred")
-      return of(new HttpResponse({status: 0}))
+    let observable: Observable<any> = EMPTY;
+
+    switch (httpError.status) {
+      case ERRORS.BadRequest.status:
+        this.notificationService.addNotification(ERRORS.BadRequest.message);
+        break;
+      case ERRORS.Unauthorized.status:
+        this.notificationService.addNotification(ERRORS.Unauthorized.message);
+        this.router.navigateByUrl("auth/signin");
+        break;
+      case ERRORS.Forbidden.status:
+        this.notificationService.addNotification(ERRORS.Unauthorized.message);
+        window.history.back();
+        break;
+      case ERRORS.NotFound.status:
+        this.notificationService.addNotification(ERRORS.NotFound.message);
+        break;
+      default:
+        this.notificationService.addNotification("Unexpected error: " + httpError.status);
+        break;
     }
-    else {
-      this.notificationService.addNotification(httpError.error.message);
-      window.history.back();
-      return EMPTY;
-    }
+
+    return observable;
   }
 
-  private handleInvalidData(infos: any): Observable<any> {
-    if (infos.hasOwnProperty("cookie")) {
+  private handleInvalidData(info: any): Observable<any> {
+    if (info.hasOwnProperty("cookie")) {
       this.router.navigateByUrl("auth/signin");
       this.notificationService.addNotification('Please signin again')
       return EMPTY;
     }
-    else if(infos.hasOwnProperty("objectId")) {
-      this.notificationService.addNotification(infos.objectId);
+    else if (info.hasOwnProperty("objectId")) {
+      this.notificationService.addNotification(info.objectId);
       return EMPTY
     }
     else {
       return of(new HttpResponse({
-        status: ErrorStatus.InvalidData,
-        body: infos,
+        status: 0,
+        body: info,
       }));
     }
   }
