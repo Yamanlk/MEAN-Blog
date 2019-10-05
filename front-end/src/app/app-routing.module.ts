@@ -5,10 +5,11 @@ import { ArticleComponent } from './article/article.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
-
+import {ArticleFormComponent} from "./article-form/article-form.component"
 
 const routes: Routes = [
   {path: '', component: BlogComponent},
+  {path: 'blog/creat', component: ArticleFormComponent},
   {path: 'blog/:articleId', component: ArticleComponent},
   {path: 'auth/signin', component: SigninComponent},
   {path: 'auth/signup', component: SignupComponent},

@@ -5,3 +5,11 @@ export interface ISArticle {
     content?: string;
     categories?: string[];
 }
+
+export const Categories = [
+    "Node js",
+    "Angular",
+    "React",
+    "MongoDB",
+    "Mongoose",
+]

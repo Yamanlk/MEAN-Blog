@@ -12,7 +12,8 @@ export const creatArticle = [
     function (req: Request, res: Response, next: NextFunction) {
         Article.creatArticle(req.cookies.user.id, req.body)
             .then((doc) => {
-                res.send(doc);
+                res.status(201);
+                res.json({id: doc.id});
             })
             .catch(next);
     }

@@ -3,8 +3,8 @@
     <img [routerLink]="['']" src="../assets/JS-logo.png" style="width: 64px; margin-right: 0px;" id='page-top-logo'>
     <p style="margin-top: auto; margin-left: 5px; margin-bottom: 0px; font-size: 25px;">Bloger</p>
     <div id="nav-bar-buttons-right" style="margin-left: auto">
-      <a href="https://github.com/Yamanlk/MEAN-Blog" style="text-decoration: none; color: black;"><button mat-icon-button
-          style="margin-right: 10px">
+      <a href="https://github.com/Yamanlk/MEAN-Blog" style="text-decoration: none; color: black;"><button
+          mat-icon-button style="margin-right: 10px">
           <mat-icon class="im im-github"></mat-icon>
         </button></a>
       <button mat-flat-button color="primary" style="margin-right: 10px; margin-left: 10px"
@@ -22,34 +22,35 @@
       <mat-icon>menu</mat-icon>
     </button>
   </mat-toolbar>
-  
-  
+
+
   <mat-sidenav-container style="height: 100%">
-      <mat-sidenav id="side-nav" #nav mode="over" position="end" [fixedInViewport]="true" style="margin-top: 56px">
-          <mat-nav-list>
-            <mat-list-item *ngIf="authService.getUser()">
-              <mat-icon class="im im-user-circle" style="margin-right: 10px"></mat-icon> yaman lakis
-            </mat-list-item>
-            <mat-divider *ngIf="authService.getUser()"></mat-divider>
-            <mat-list-item>
-              <a style="text-decoration: none; color: black" href='https://github.com'>
-                <mat-icon class="im im-github" style="margin-right: 10px"></mat-icon>Open on Github
-              </a>
-            </mat-list-item>
-            <mat-list-item [routerLink]="['auth/signup']" *ngIf="!authService.getUser()">
-              <mat-icon class="im im-plus" style="margin-right: 10px;"></mat-icon> SIGN UP
-            </mat-list-item>
-            <mat-list-item [routerLink]="['auth/signin']" *ngIf="!authService.getUser()">
-              <mat-icon class="im im-sign-in" style="margin-right: 10px"></mat-icon> SIGN IN
-            </mat-list-item>
-            <mat-list-item [routerLink]="['']" (click)="authService.logout()" *ngIf="authService.getUser()">
-              <mat-icon class="im im-sign-out" style="margin-right: 10px"></mat-icon> LOGOUT
-            </mat-list-item>
-          </mat-nav-list>
-        </mat-sidenav>
-      <mat-sidenav-content>
-        <router-outlet></router-outlet>
-        <div style="margin-top: auto; height: auto;"></div>
-      </mat-sidenav-content>
+    <mat-sidenav id="side-nav" #nav mode="over" position="end" [fixedInViewport]="true" style="margin-top: 56px">
+      <mat-nav-list>
+        <mat-list-item *ngIf="authService.getUser()">
+          <mat-icon class="im im-user-circle" style="margin-right: 10px"></mat-icon> yaman lakis
+        </mat-list-item>
+        <mat-divider *ngIf="authService.getUser()"></mat-divider>
+        <mat-list-item>
+          <a style="text-decoration: none; color: black" href='https://github.com'>
+            <mat-icon class="im im-github" style="margin-right: 10px"></mat-icon>Open on Github
+          </a>
+        </mat-list-item>
+        <mat-list-item [routerLink]="['auth/signup']" *ngIf="!authService.getUser()">
+          <mat-icon class="im im-plus" style="margin-right: 10px;"></mat-icon> SIGN UP
+        </mat-list-item>
+        <mat-list-item [routerLink]="['auth/signin']" *ngIf="!authService.getUser()">
+          <mat-icon class="im im-sign-in" style="margin-right: 10px"></mat-icon> SIGN IN
+        </mat-list-item>
+        <mat-list-item [routerLink]="['']" (click)="authService.logout()" *ngIf="authService.getUser()">
+          <mat-icon class="im im-sign-out" style="margin-right: 10px"></mat-icon> LOGOUT
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+      <div style="margin-top: auto; height: auto;"></div>
+    </mat-sidenav-content>
   </mat-sidenav-container>
+  <mat-icon class="icon-button im im-plus-circle" color="primary" style="position: absolute; z-index: 2; right: 50px; bottom: 50px; font-size: 48px" (click)="onCreatButtonClick()"></mat-icon>
 </div>

@@ -2,7 +2,7 @@ import * as Joi from "@hapi/joi"
 import { Response, Request, NextFunction } from "express"
 import { InvalidDataError } from "shared";
 
-const validCategories = ['React', 'Node', 'Mognodb', 'Express', 'Angular']; // require the validCategories from some config folder
+import { Categories as validCategories } from "shared" 
 
 const Schema = Joi.object({
     title: Joi.string().min(2).max(30),

@@ -18,7 +18,11 @@ export class ArticleComponent implements OnInit {
   ngOnInit() {
     this.blogService.subjectAtricle.subscribe(fetchedArticle => {
       if(fetchedArticle === undefined) this.isError = true;
-      else this.article = fetchedArticle;
+      else 
+      {
+        this.isError = false;
+        this.article = fetchedArticle
+      };
     })
     this.route.paramMap.subscribe(params => {
       this.blogService.getArticleById(params.get("articleId"));

@@ -1,1 +1,51 @@
-<p>article-form works!</p>
+<form #f="ngForm" (submit)="submitArticle(f.value)">
+    <mat-grid-list cols="1" rowHeight="100px" style="max-width: 500px; margin: 0 auto">
+        <mat-grid-tile colspan="1">
+            <h2 style="text-align: center">Article Form</h2>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-form-field appearance="outline">
+                <mat-label>Title</mat-label>
+                <input matInput type="text" ngModel name="title" #titleInput="ngModel"
+                    [minlength]="globals.AtricleValidationGlobals.title.minLength"
+                    [maxLength]="globals.AtricleValidationGlobals.title.maxLength"
+                    [required]="globals.AtricleValidationGlobals.title.required"
+                    [pattern]="globals.AtricleValidationGlobals.title.onlyIncludeRegex">
+                <mat-hint align="end">
+                    {{titleInput.value?.length}}/{{globals.AtricleValidationGlobals.title.maxLength}}</mat-hint>
+
+                <mat-error *ngIf="titleInput.hasError('minlenght')">Should be at least
+                    {{globals.AtricleValidationGlobals.title.minLength}} letters</mat-error>
+                <mat-error *ngIf="titleInput.hasError('pattern')">you have used unpermitted letters</mat-error>
+            </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colSpan="1" rowspan="5">
+            <mat-form-field appearance="outline">
+                <mat-label>Content</mat-label>
+                <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="22" type="text" ngModel name="content"
+                    #contentInput="ngModel" [minlength]="globals.AtricleValidationGlobals.content.minLength"
+                    [maxLength]="globals.AtricleValidationGlobals.content.maxLength"
+                    [required]="globals.AtricleValidationGlobals.content.required"
+                    [pattern]="globals.AtricleValidationGlobals.content.onlyIncludeRegex">
+            </textarea>
+                <mat-hint align="end">
+                    {{contentInput.value?.length}}/{{globals.AtricleValidationGlobals.content.maxLength}}</mat-hint>
+                <mat-error *ngIf="contentInput.hasError('minlenght')">Should be at least
+                    {{globals.AtricleValidationGlobals.content.minLength}} letters</mat-error>
+                <mat-error *ngIf="contentInput.hasError('pattern')">you have used unpermitted letters</mat-error>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="3">
+            <mat-selection-list ngModel name="categories" style="width: 100%">
+                <mat-list-option [value]="category" *ngFor="let category of globals.AtricleValidationGlobals.categories">
+                    {{category}}
+                </mat-list-option>
+            </mat-selection-list>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <button mat-flat-button style="width: 100%" color="primary" type="submit"
+                [disabled]="f.invalid">Creat</button>
+        </mat-grid-tile>
+    </mat-grid-list>
+</form>
