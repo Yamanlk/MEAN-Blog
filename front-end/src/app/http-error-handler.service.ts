@@ -12,14 +12,12 @@ export class HttpErrorHandlerService implements HttpInterceptor {
 
   constructor(private notificationService: NotificationService, private router: Router) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log(req);
     return next.handle(req).pipe(
       map(evnt => {
         if (navigator.onLine === false) throw new HttpErrorResponse({ error: new NoInternetConnectionError, status: ErrorStatus.NoInternetConnection });
         else return evnt;
       }),
       catchError((httpResponseError, caught) => {
-        console.log(httpResponseError);
         return this.handleError(httpResponseError);
       })
     )
