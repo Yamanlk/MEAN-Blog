@@ -1,9 +1,6 @@
 @media (max-width: 500px) {
     .blog {
-        flex-flow: column nowrap;
-    }
-    .article {
-        margin: 0px auto;
+        flex-direction: column;
     }
 }
 @media (min-width: 500px) {
@@ -14,6 +11,7 @@
 .blog {
     display: flex;
     justify-content: center;
-    max-width: 100%;
-    margin-right: 65px
+    max-width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
 }

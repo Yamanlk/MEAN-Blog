@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ISArticle } from 'shared';
 import { BlogService } from '../blog.service';
 import { NotificationService } from '../notification.service';
+import {Subscription} from 'rxjs'
 
 
 @Component({
@@ -9,17 +10,18 @@ import { NotificationService } from '../notification.service';
   templateUrl: './blog.component.html',
   styleUrls: ['./blog.component.css']
 })
-export class BlogComponent implements OnInit {
+export class BlogComponent implements OnInit, OnDestroy {
 
   articles: ISArticle[] = []
   from=0;
   count = 5;
   isLoading: boolean = false;
+  subscription: Subscription;
 
   constructor(private blogService: BlogService, private notificationService: NotificationService) { }
 
   ngOnInit() {
-      this.blogService.subjectArticles.subscribe(fetchedArticles => {
+      this.subscription = this.blogService.subjectArticles.subscribe(fetchedArticles => {
         if(fetchedArticles.length === 0) {
           this.notificationService.addNotification('There is no more articles');
           this.isLoading = false;
@@ -30,6 +32,10 @@ export class BlogComponent implements OnInit {
         }
       });
       this.blogService.getArticles(this.from, this.count);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onLoadMoreArticleButtonClick() {
