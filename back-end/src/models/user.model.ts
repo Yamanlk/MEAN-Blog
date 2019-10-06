@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { ISUser, UserValidator, InvalidDataError, NotFoundError } from 'shared'
+import { ISUser, UserValidator, ERRORS } from 'shared'
 import { IDocumentArticle } from './article.model';
 
 export interface IDocumentUser extends ISUser, mongoose.Document {
@@ -26,10 +26,13 @@ userSchema.statics.creatUser = function (user: ISUser): Promise<IDocumentUser> {
     return new Promise((resolve, reject) => {
         User.findOne({ username: user.username })
             .then((doc) => {
-                if (doc)
-                    reject(new InvalidDataError({
+                if (doc) {
+                    let error = ERRORS.InvalidDAta;
+                    error.info = {
                         username: "username is already taken"
-                    }));
+                    }
+                    reject(error);
+                }
                 else {
                     User.create(user)
                         .then(resolve)
@@ -43,7 +46,7 @@ userSchema.statics.findUserById = function (userId: string): Promise<IDocumentUs
     return new Promise((resolve, reject) => {
         User.findById(userId)
             .then((doc) => {
-                if(!doc) reject(new NotFoundError());
+                if (!doc) reject(ERRORS.NotFound);
                 else resolve(doc);
             })
             .catch(reject);
@@ -53,7 +56,7 @@ userSchema.statics.findUserByUsername = function (username: string): Promise<IDo
     return new Promise((resolve, reject) => {
         User.findOne({ username: username })
             .then((doc) => {
-                if(!doc) reject(new NotFoundError());
+                if (!doc) reject(ERRORS.NotFound);
                 else resolve(doc);
             })
             .catch(reject);

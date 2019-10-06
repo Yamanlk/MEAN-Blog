@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { NotFoundError, BaseError } from "shared"
+import { BaseError, ERRORS } from "shared"
 export default function (error: BaseError, req: Request, res: Response, next: NextFunction) {
     if (error) {
         if (error.status >= 500) {
@@ -11,8 +11,7 @@ export default function (error: BaseError, req: Request, res: Response, next: Ne
         }
     }
     else {
-        error = new NotFoundError();
-        res.status(error.status);
-        res.send(error);
+        res.status(ERRORS.NotFound.status);
+        res.send(ERRORS.NotFound);
     }
 };

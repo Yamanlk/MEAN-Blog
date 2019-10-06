@@ -15,13 +15,12 @@ export class BlogService {
   public getArticleById(id: string) {
     const url = ["http://localhost:3000/api/article", id].join('/');
     this.http.get(url, {observe: "response"}).subscribe(resp => {
-      console.log(resp);
-      if(resp.status === 0) {
-        this.subjectAtricle.next(undefined);
-      }
       if(resp.status === 200) {
         this.subjectAtricle.next(resp.body);
       }
+    },
+    (error) => {
+      this.subjectAtricle.next(undefined);
     })
   }
 
@@ -40,8 +39,7 @@ export class BlogService {
   public creatArticle(article: ISArticle) {
     this.http.post("http://localhost:3000/api/article/creat", article, {observe: "response"}).subscribe(resp => {
       if(resp.status === 201) {
-        console.log(resp.body)
-        this.router.navigateByUrl(["blog", (<any>resp.body).id].join('/'));
+        this.router.navigateByUrl("/");
       }
     })
   }

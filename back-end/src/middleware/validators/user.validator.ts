@@ -1,6 +1,6 @@
 import * as Joi from '@hapi/joi';
 import { Request, Response, NextFunction } from "express"
-import { UserValidator, InvalidDataError } from "shared"
+import { UserValidator, ERRORS } from "shared"
 
 export const userSchema = Joi.object().keys({
     "firstname": Joi.string().min(UserValidator.firstname.minLength).max(UserValidator.firstname.maxLength).regex(RegExp(UserValidator.firstname.onlyIncludeRegex)),
@@ -11,16 +11,24 @@ export const userSchema = Joi.object().keys({
 
 export function validateUser(req: Request, res: Response, next: NextFunction): void {
     const result = Joi.validate(req.body.author, userSchema, { presence: "required" })
-    if (result.error) next(new InvalidDataError({
-        [result.error.name]: result.error.message
-    }));
+    if (result.error) {
+        let error = ERRORS.InvalidData;
+        error.info = {
+            [result.error.name]: result.error.message
+        };
+        next(error);
+    }
     else next();
 };
 
 export function validateAuthorUpdate(req: Request, res: Response, next: NextFunction) {
     const result = userSchema.validate(req.body, { presence: "optional" });
-    if (result.error) next(new InvalidDataError({
-        [result.error.name]: result.error.message
-    }));
+    if (result.error) {
+        let error = ERRORS.InvalidData;
+        error.info = {
+            [result.error.name]: result.error.message
+        };
+        next(error);
+    }
     else next()
 };

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose"
-import { ISArticle, ForbiddenError, NotFoundError, UnauthorizedError } from "shared"
+import { ISArticle, ERRORS } from "shared"
 import { IDocumentUser, User } from "./user.model"
 
 export interface IDocumentArticle extends mongoose.Document, ISArticle {
@@ -32,7 +32,7 @@ articleSchema.statics.findByCategory = function (categoriesList: string[]): Prom
             exec((err, docs) => {
                 if (err)
                     reject(err);
-                else if(docs.length === 0) reject(new NotFoundError());
+                else if(docs.length === 0) reject(ERRORS.NotFound);
                 else resolve(docs);
             });
     });
@@ -41,7 +41,7 @@ articleSchema.statics.findByUser = function (userId: string): Promise<IDocumentA
     return new Promise((resolve, reject) => {
         Article.find({ userId: userId })
             .then((doc) => {
-                if(!doc) reject(new NotFoundError());
+                if(!doc) reject(ERRORS.NotFound);
                 else resolve(doc);
             })
             .catch(reject);
@@ -60,9 +60,9 @@ articleSchema.statics.updateArticle = function (userId: string, newArticle: ISAr
         Article.findById(newArticle.id)
             .then((doc) => {
                 if (!doc)
-                    reject(new NotFoundError());
+                    reject(ERRORS.NotFound);
                 else if ((<mongoose.Types.ObjectId>doc.userId).toHexString() !== userId)
-                    reject(new UnauthorizedError());
+                    reject(ERRORS.Unauthorized);
                 else {
                     Object.assign(doc, newArticle);
                     doc.save()
@@ -78,9 +78,9 @@ articleSchema.statics.deleteArticle = function (userId: string, articleId: strin
         Article.findById(articleId)
             .populate('userID')
             .then((doc) => {
-                if (!doc) reject(new NotFoundError())
+                if (!doc) reject(ERRORS.NotFound)
                 else if ((<IDocumentUser>doc.userId).toString() !== userId)
-                    reject(new ForbiddenError());
+                    reject(ERRORS.Forbidden);
                 else {
                     Article.deleteOne(doc).exec().then(resolve).catch(reject);
                 }
@@ -93,7 +93,7 @@ articleSchema.statics.findArticleById = function (articleId: string): Promise<ID
         Article.findById(articleId)
         .populate("userId", ["firstname", "lastname"])
             .then(doc => {
-                if(!doc) reject(new NotFoundError());
+                if(!doc) reject(ERRORS.NotFound);
                 else resolve(doc);
             })
             .catch(reject);
@@ -106,7 +106,7 @@ articleSchema.statics.getArticles = function (from: number, count: number): Prom
             .limit(count)
             .exec((err, docs) => {
                 if (err) reject(err)
-                else if(docs.length === 0) reject(new NotFoundError());
+                else if(docs.length === 0) reject(ERRORS.NotFound);
                 else resolve(docs);
             })
     })

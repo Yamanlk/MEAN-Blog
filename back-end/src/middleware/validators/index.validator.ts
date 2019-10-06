@@ -1,13 +1,16 @@
 import {Request, Response, NextFunction} from "express"
-import { InvalidDataError } from "shared";
+import { ERRORS } from "shared";
 
 const objcetIdRegex = /^[a-f\d]{24}$/;
 
 export function validateObjcetId (req: Request, res: Response, next: NextFunction): void {
-    if (!objcetIdRegex.test(req.params.id))
-        next(new InvalidDataError({
-            objectId: "invalid id"
-        }));
+    if (!objcetIdRegex.test(req.params.id)) {
+        let error = ERRORS.InvalidData;
+        error.info = {
+            objectId: "Invalid id"
+        };
+        next(error);
+    }
     else
         next();
 };

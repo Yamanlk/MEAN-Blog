@@ -9,7 +9,7 @@ import {Location} from '@angular/common'
 export class PageNotFoundComponent implements OnInit {
 
   constructor(public location: Location) { }
-  @Input('error-message') message: string;
+  @Input('error-message') message: string = "Somthing went wrong";
   
   ngOnInit() {
   }

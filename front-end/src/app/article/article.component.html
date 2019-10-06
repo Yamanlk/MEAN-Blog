@@ -1,4 +1,4 @@
-<app-page-not-found error-message="Unexpected error occurred" *ngIf="isError"></app-page-not-found>
+<app-page-not-found error-message="Page was not found" *ngIf="isError"></app-page-not-found>
 <mat-spinner *ngIf="!article && !isError" style="margin: auto"></mat-spinner>
 <div *ngIf="article && !isError" class="article">
     <button mat-icon-button style="position: absolute; left: 20px;" onclick="window.history.back()">

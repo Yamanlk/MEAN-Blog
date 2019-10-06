@@ -4,7 +4,7 @@ import { Article } from "../models/article.model"
 import { validate, validateUpdate, validateCategories } from "../middleware/validators/article.validator"
 import { isAuthenticated } from "../middleware/validators/auth.validator"
 import { validateObjcetId } from "../middleware/validators/index.validator"
-import { InvalidDataError, NotFoundError } from "shared"
+import { ERRORS } from "shared"
 
 export const creatArticle = [
     isAuthenticated,
@@ -13,7 +13,7 @@ export const creatArticle = [
         Article.creatArticle(req.cookies.user.id, req.body)
             .then((doc) => {
                 res.status(201);
-                res.json({id: doc.id});
+                res.json({ id: doc.id });
             })
             .catch(next);
     }
@@ -24,7 +24,7 @@ export const findArticleById = [
         Article.findById(req.params.id)
             .then((doc) => {
                 if (!doc) {
-                    next(new NotFoundError());
+                    next(ERRORS.NotFound);
                 } else {
                     res.send(doc);
                 }
@@ -80,9 +80,11 @@ export const getAtricles = [
         const from = Number.parseInt(req.query.from);
         const count = Number.parseInt(req.query.count);
         if (from < 0 || count <= 0 || isNaN(from) || isNaN(count)) {
-            next(new InvalidDataError({
+            let error = ERRORS.InvalidData;
+            error.info = {
                 data: "data was not provided correctly"
-            }));
+            }
+            next(error);
         }
         else {
             Article.getArticles(from, count)

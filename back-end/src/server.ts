@@ -3,12 +3,13 @@ import * as mongoose from "mongoose";
 import * as jwt from "jsonwebtoken"
 import * as cookieParser from "cookie-parser"
 import * as path from "path"
+import * as cookie from "cookie"
 
 import { Env } from "./config/config"
 import { router } from "./routes/index"
 
 import errorHandler from "./middleware/error.handler"
-import { InvalidDataError } from "shared";
+import { ERRORS, BaseError } from "shared";
 const expressJsonParser = express.json({ type: 'application/json' });
 const expressUrlencodedParser = express.urlencoded({ extended: false });
 
@@ -34,14 +35,25 @@ app.use(expressUrlencodedParser);
 app.use(cookieParser());
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (req.cookies.user) {
-        if (jwt.verify(req.cookies.user, Env.jwtSecret)) {
-            req.cookies.user = jwt.decode(req.cookies.user);
-            next();
+        try {
+            if (jwt.verify(req.cookies.user, Env.jwtSecret)) {
+                req.cookies.user = jwt.decode(req.cookies.user);
+                next();
+            }
+            else {
+                let error: BaseError = ERRORS.InvalidData;
+                error.info = {
+                    'cookie': true
+                }
+                next(error);
+            }
+        } catch (e) {
+            let error: BaseError = ERRORS.InvalidData;
+            error.info = {
+                'cookie': true
+            }
+            next(error);
         }
-        else
-            next(new InvalidDataError({
-                cookie: "invalid user token"
-            }));
     }
     else
         next();

@@ -1,8 +1,8 @@
 import * as Joi from "@hapi/joi"
 import { Response, Request, NextFunction } from "express"
-import { InvalidDataError } from "shared";
+import { ERRORS } from "shared";
 
-import { Categories as validCategories } from "shared" 
+import { Categories as validCategories } from "shared"
 
 const Schema = Joi.object({
     title: Joi.string().min(2).max(30),
@@ -12,25 +12,36 @@ const Schema = Joi.object({
 
 export function validate(req: Request, res: Response, next: NextFunction): void {
     const result = Schema.validate(req.body, { presence: "required" });
-    if (result.error) next(new InvalidDataError({
-        [result.error.name]: result.error.message
-    }));
+    if (result.error) {
+        let error = ERRORS.InvalidData;
+        error.info = {
+            [result.error.name]: result.error.message
+        };
+        next(error);
+    }
     else next();
 };
 
 export function validateUpdate(req: Request, res: Response, next: NextFunction): void {
     const result = Schema.validate(req.body);
-    if (result.error) next(new InvalidDataError({
-        [result.error.name]: result.error.message
-    }));
+    if (result.error) {
+        let error = ERRORS.InvalidData;
+        error.info = {
+            [result.error.name]: result.error.message
+        };
+        next(error);
+    }
     else next();
 };
 
 export function validateCategories(req: Request, res: Response, next: NextFunction): void {
-    if (req.query.cat == undefined)
-        return next(new InvalidDataError({
-            categories: "categories are not provided"
-        }));
+    if (req.query.cat == undefined){
+        let error = ERRORS.InvalidData;
+        error.info = {
+            categories: "Categories are not provided"
+        };
+        next(error);
+    }
     else
         next();
 };

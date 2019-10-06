@@ -5,36 +5,18 @@ import { map, catchError, retryWhen, take } from "rxjs/operators"
 import { NotificationService } from './notification.service';
 import { ERRORS } from 'shared'
 import { Router } from '@angular/router';
+import { UserAuthenticationService } from './user-authentication.service';
 
 
 @Injectable()
 export class HttpErrorHandlerService implements HttpInterceptor {
 
-  constructor(private notificationService: NotificationService, private router: Router) { }
+  constructor(private notificationService: NotificationService, private router: Router, private authenticationService: UserAuthenticationService) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    let tries = 3;
-    let delay = 1000;
-
     return next.handle(req).pipe(
       map(evnt => {
         if (navigator.onLine === false) { throw new Error("No internet connection"); }
         else { return evnt; }
-      }),
-      retryWhen((errors) => {
-        return errors.pipe(
-          map(error => {
-            if (error instanceof HttpErrorResponse) {
-              if (error.status === ERRORS.BadRequest.status || error.status === 0) {
-                return;
-              } else if (tries === 0) {
-                throw error;
-              } else {
-                return;
-              };
-            } else return;
-          })
-        )
       }),
       catchError((error, caught) => {
         if (error instanceof Error) {
@@ -47,8 +29,7 @@ export class HttpErrorHandlerService implements HttpInterceptor {
   }
 
   private handleError(httpError: HttpErrorResponse): Observable<any> {
-    let observable: Observable<any> = EMPTY;
-
+    let observable: Observable<any>;
     switch (httpError.status) {
       case ERRORS.BadRequest.status:
         this.notificationService.addNotification(ERRORS.BadRequest.message);
@@ -64,27 +45,30 @@ export class HttpErrorHandlerService implements HttpInterceptor {
       case ERRORS.NotFound.status:
         this.notificationService.addNotification(ERRORS.NotFound.message);
         break;
+      case ERRORS.InvalidData.status:
+        observable = this.handleInvalidData(httpError.error.info)
+        break;
       default:
-        this.notificationService.addNotification("Unexpected error: " + httpError.status);
+        this.notificationService.addNotification("Unexpected error: ");
         break;
     }
-
+    if(observable)
     return observable;
+    else throw Observable.throw(new Error());
   }
 
   private handleInvalidData(info: any): Observable<any> {
     if (info.hasOwnProperty("cookie")) {
-      this.router.navigateByUrl("auth/signin");
-      this.notificationService.addNotification('Please signin again')
-      return EMPTY;
+      this.authenticationService.logout();
+      throw Observable.throw(new Error());
     }
     else if (info.hasOwnProperty("objectId")) {
       this.notificationService.addNotification(info.objectId);
-      return EMPTY
+      throw Observable.throw(new Error());
     }
     else {
       return of(new HttpResponse({
-        status: 0,
+        status: ERRORS.InvalidData.status,
         body: info,
       }));
     }

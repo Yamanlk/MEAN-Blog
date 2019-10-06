@@ -6,7 +6,8 @@ import { SignupDataUsername, SignupDataEmail } from '../../../shared/dist/auth/s
 import { HttpClient } from '@angular/common/http';
 import * as jwtDecode from "jwt-decode"
 import { CookieService } from 'ngx-cookie-service';
-import { ErrorStatus } from 'shared';
+import { ERRORS } from 'shared';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class UserAuthenticationService {
   loggedUserSubject = new Subject<ISUser>();
   formErrorsSubject = new Subject<any>();
 
-  constructor(private http: HttpClient, private cookieService: CookieService) { }
+  constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) { }
 
   getUser(): ISUser {
     if (this.cookieService.get("user")) {
@@ -29,7 +30,7 @@ export class UserAuthenticationService {
 
   signInViaUsername(form: SigninDataUsername): void {
     this.http.post<any>('http://localhost:3000/api/auth/login', form, { "observe": "response" }).subscribe(resp => {
-      if (resp.status === ErrorStatus.InvalidData) {
+      if (resp.status === ERRORS.InvalidData.status) {
         this.formErrorsSubject.next(resp.body);
       } else if (resp.status === 200) {
         this.loggedUser = resp.body;
@@ -45,7 +46,7 @@ export class UserAuthenticationService {
 
   signUpViaUsername(form: SignupDataUsername): void {
     this.http.post<any>('http://localhost:3000/api/auth/signup', form, { "observe": "response" }).subscribe(resp => {
-      if (resp.status === ErrorStatus.InvalidData) {
+      if (resp.status === ERRORS.InvalidData.status) {
         this.formErrorsSubject.next(resp.body);
       } else if (resp.status === 200) {
         this.loggedUser = resp.body;
@@ -63,6 +64,6 @@ export class UserAuthenticationService {
     this.cookieService.delete("user", "/", "localhost");
     this.loggedUser = undefined;
     this.loggedUserSubject.next(this.loggedUser);
-    location.reload();
+    this.router.navigateByUrl("auth/signin");
   }
 }

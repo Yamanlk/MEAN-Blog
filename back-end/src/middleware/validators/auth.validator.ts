@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import * as Joi from "@hapi/joi";
-import { UserValidator, UnauthorizedError } from "shared"
+import { UserValidator, ERRORS } from "shared"
 import {userSchema} from "./user.validator"
 
 const usernameLoginSchema = Joi.object({
@@ -10,7 +10,7 @@ const usernameLoginSchema = Joi.object({
 
 export function isAuthenticated(req: Request, res: Response, next: NextFunction): void {
     if (!req.cookies.user)
-        next(new UnauthorizedError());
+        next(ERRORS.Unauthorized);
     else
         next();
 };

@@ -3,18 +3,21 @@ import * as jwt from "jsonwebtoken"
 import * as cookie from "cookie"
 import { Env } from "../../config/config"
 import { Response, Request, NextFunction } from "express"
-import { InvalidDataError } from 'shared';
+import { ERRORS } from 'shared';
 
 export function login(req: Request, res: Response, next: NextFunction): void {
     const username = req.body.username;
     const password = req.body.password;
     User.findOne({ username: username, password: password })
         .then((doc) => {
-            if (!doc)
-                next(new InvalidDataError({
+            if (!doc) {
+                let error = ERRORS.InvalidData;
+                error.info = {
                     username: "username and password doesn't match",
                     password: "username and password doesn't match"
-                }));
+                }
+                next(error);
+            }
             else {
                 const user = {
                     id: doc.id,
