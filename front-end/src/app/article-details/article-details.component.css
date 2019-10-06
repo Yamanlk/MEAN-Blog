@@ -1,12 +1,15 @@
-@media(max-width: 500px) {
+@media(max-width: 800px) {
     .article {
-        width: 200px;
+        width: 85%;
     }
     .continue-reading {
-        left: 157px;
+        right: 10px;
+    }
+    .category {
+        width: 200px;
     }
 }
-@media(min-width: 500px) {
+@media(min-width: 800px) {
     .article {
         width: 328px;
     }
@@ -15,6 +18,9 @@
     }
     .article .icon-button:hover {
         transform: translateY(-2px) scale(1.2);
+    }
+    .category {
+        width: 75px;
     }
 }
 .article {
@@ -61,8 +67,6 @@ mat-chip {
 }
 
 .category {
-    max-width: 80px;
-    width: max-content;
     border-radius: 50px;
     text-align: center;
     line-height: 30px;
@@ -72,11 +76,7 @@ mat-chip {
     color: black;
     overflow: hidden;
     padding: 0px 7.5px;
-}
-
-.category {
     margin-right: 10px;
-    width: 75px;
 }
 
 .category-etc {

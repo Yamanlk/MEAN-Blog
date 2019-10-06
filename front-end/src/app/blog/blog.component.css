@@ -1,9 +1,9 @@
-@media (max-width: 500px) {
+@media (max-width: 800px) {
     .blog {
         flex-direction: column;
     }
 }
-@media (min-width: 500px) {
+@media (min-width: 800px) {
     .blog {
     flex-flow: row wrap;
     }
@@ -11,7 +11,7 @@
 .blog {
     display: flex;
     justify-content: center;
-    max-width: fit-content;
+    max-width: 100%;
     margin-right: auto;
     margin-left: auto;
 }
