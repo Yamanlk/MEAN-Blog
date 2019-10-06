@@ -9,6 +9,7 @@ export interface IDocumentArticle extends mongoose.Document, ISArticle {
 export interface IModelArticle extends mongoose.Model<IDocumentArticle> {
     findByCategory(categoriesList: String[]): Promise<IDocumentArticle>;
     findByUser(userId: string): Promise<IDocumentArticle[]>;
+    findArticleById(articleId:string): Promise<IDocumentArticle>;
     creatArticle(userId: string, article: ISArticle): Promise<IDocumentArticle>;
     updateArticle(userId: string, newArticle: ISArticle): Promise<IDocumentArticle>;
     deleteArticle(userId: string, articleId: string): Promise<{ ok?: number, n?: number, deletedCound?: number }>;
@@ -57,7 +58,7 @@ articleSchema.statics.creatArticle = function (userID: string, article: ISArticl
 };
 articleSchema.statics.updateArticle = function (userId: string, newArticle: ISArticle): Promise<IDocumentArticle> {
     return new Promise((resolve, reject) => {
-        Article.findById(newArticle.id)
+        Article.findById(newArticle._id)
             .then((doc) => {
                 if (!doc)
                     reject(ERRORS.NotFound);
@@ -106,7 +107,6 @@ articleSchema.statics.getArticles = function (from: number, count: number): Prom
             .limit(count)
             .exec((err, docs) => {
                 if (err) reject(err)
-                else if(docs.length === 0) reject(ERRORS.NotFound);
                 else resolve(docs);
             })
     })

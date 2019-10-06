@@ -16,7 +16,7 @@ export class ArticleComponent implements OnInit {
   constructor(private route: ActivatedRoute, private blogService: BlogService) { }
 
   ngOnInit() {
-    this.blogService.subjectAtricle.subscribe(fetchedArticle => {
+    this.blogService.subjectArticle.subscribe(fetchedArticle => {
       if(fetchedArticle === undefined) this.isError = true;
       else 
       {

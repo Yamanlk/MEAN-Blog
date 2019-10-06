@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ISArticle } from 'shared';
+import { BlogService } from '../blog.service';
+import { NotificationService } from '../notification.service';
 
 
 @Component({
@@ -8,43 +11,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BlogComponent implements OnInit {
 
-  articles = [
-    {
-      "header": "This one",
-      "content": "Note that just as a form group contains a group of controls, the profile form FormGroup is bound to the form element with the FormGroup directive ...",
-      "isLoved": true,
-      "categories": ["Node js", "Angular 8", "MongoDB", "Mongoose"],
-      "id": "5d92671296a8d419901319a5"
-    },
-    {
-      "header": "React huh",
-      "content": "Note that just as a form group contains a group of controls, the profile form FormGroup is bound to the form element with the FormGroup directive ...",
-      "isLoved": true,
-      "categories": ["Node js", "React js", "Flux"],
-      "id": "someID"
-    },
-    {
-      "header": "Build Somthing weird",
-      "content": "Note that just as a form group contains a group of controls, the profile form FormGroup is bound to the form element with the FormGroup directive ...",
-      "isLoved": true,
-      "categories": ["Bazel", "Yarn", "Python", "GO"],
-      "id": "someID"
-    },
-    {
-      "header": "Node JS only",
-      "content": "Note that just as a form group contains a group of controls, the profile form FormGroup is bound to the form element with the FormGroup directive ...",
-      "isLoved": false,
-      "categories": ["Node js", "Pug", "SQL","Node js", "Pug", "SQL","Node js", "Pug", "SQL"],
-      "id": "someID"
-    }
-  ]
+  articles: ISArticle[] = []
+  from=0;
+  count = 5;
+  isLoading: boolean = false;
 
-  constructor() { }
+  constructor(private blogService: BlogService, private notificationService: NotificationService) { }
 
   ngOnInit() {
+      this.blogService.subjectArticles.subscribe(fetchedArticles => {
+        if(fetchedArticles.length === 0) {
+          this.notificationService.addNotification('There is no more articles');
+          this.isLoading = false;
+        } else {
+          this.articles.push(...fetchedArticles);
+          this.from += fetchedArticles.length;
+          this.isLoading = false;
+        }
+      });
+      this.blogService.getArticles(this.from, this.count);
   }
 
-  onClickArticle(id) {
+  onLoadMoreArticleButtonClick() {
+    this.isLoading = true;
+    this.blogService.getArticles(this.from, this.count);
   }
 
 }

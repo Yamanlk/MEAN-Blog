@@ -1,12 +1,12 @@
 <mat-card class="article">
-    <div class="continue-reading" [routerLink]="['blog', article.id]">
+    <div class="continue-reading" [routerLink]="['blog', article._id]">
         <mat-icon class="material-icons" style="margin-left: 36px; margin-top: 15px;">keyboard_arrow_right</mat-icon>
     </div>
-    <mat-card-header>
-        {{article.header}}
+    <mat-card-header style="overflow-wrap: break-word">
+        {{article.title}}
     </mat-card-header>
     <mat-card-content>
-        {{article.content}}
+        {{article.content.substr(0,20)}}
     </mat-card-content>
     <mat-divider [inset]="true"></mat-divider>
     <mat-card-actions>
@@ -19,8 +19,7 @@
         </section>
 
         <section class="actions-right">
-            <button mat-icon-button class="icon-button" id="love" style="display: block" [ngStyle]="styles['loved']"
-                (click)="toggleLove()">
+            <button mat-icon-button class="icon-button" id="love" style="display: block">
                 <mat-icon class="material-icons">favorite</mat-icon>
             </button>
         </section>

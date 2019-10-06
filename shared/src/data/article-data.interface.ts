@@ -1,5 +1,5 @@
 export interface ISArticle {
-    id?: any;
+    _id: any;
     title?: string;
     userId?: any;
     content?: string;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, of, EMPTY } from 'rxjs';
+import { Observable, of, EMPTY, throwError } from 'rxjs';
 import { map, catchError, retryWhen, take } from "rxjs/operators"
 import { NotificationService } from './notification.service';
 import { ERRORS } from 'shared'
@@ -54,17 +54,17 @@ export class HttpErrorHandlerService implements HttpInterceptor {
     }
     if(observable)
     return observable;
-    else throw Observable.throw(new Error());
+    else return throwError(new Error());
   }
 
   private handleInvalidData(info: any): Observable<any> {
     if (info.hasOwnProperty("cookie")) {
       this.authenticationService.logout();
-      throw Observable.throw(new Error());
+      return throwError(new Error());
     }
     else if (info.hasOwnProperty("objectId")) {
       this.notificationService.addNotification(info.objectId);
-      throw Observable.throw(new Error());
+      return throwError(new Error());      
     }
     else {
       return of(new HttpResponse({

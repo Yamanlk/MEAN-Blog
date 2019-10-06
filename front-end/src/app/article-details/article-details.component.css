@@ -30,6 +30,7 @@
 .article mat-card-content {
     text-align: justify;
     text-justify: auto;
+    overflow: hidden;
 }
 
 .article mat-card-header {

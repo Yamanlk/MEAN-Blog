@@ -21,7 +21,7 @@ export const creatArticle = [
 export const findArticleById = [
     validateObjcetId,
     function (req: Request, res: Response, next: NextFunction) {
-        Article.findById(req.params.id)
+        Article.findArticleById(req.params.id)
             .then((doc) => {
                 if (!doc) {
                     next(ERRORS.NotFound);
