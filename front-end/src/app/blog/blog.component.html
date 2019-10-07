@@ -1,5 +1,5 @@
 <div class="blog">
         <app-article-details *ngFor="let article of articles"  [article]='article' class="article"></app-article-details>
 </div>
-<button *ngIf="!isLoading" mat-flat-button style="margin: 25px auto; display: block; position: relative;" (click)="onLoadMoreArticleButtonClick()"> Load more </button>
+<button *ngIf="!isLoading" mat-raised-button style="margin: 25px auto; display: block; position: relative;" (click)="onLoadMoreArticleButtonClick()"> Load more </button>
 <mat-spinner *ngIf="isLoading" style="margin: 0px auto"></mat-spinner>

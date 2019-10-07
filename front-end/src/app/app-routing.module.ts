@@ -6,6 +6,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import {ArticleFormComponent} from "./article-form/article-form.component"
+import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
   {path: '', component: BlogComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'blog/:articleId', component: ArticleComponent},
   {path: 'auth/signin', component: SigninComponent},
   {path: 'auth/signup', component: SignupComponent},
+  {path: "user/:id", component: UserComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

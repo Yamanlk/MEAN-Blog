@@ -17,6 +17,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ErrorHandlerService } from './error-handler.service';
 import { HttpErrorHandlerService } from './http-error-handler.service';
 import { ArticleFormComponent } from './article-form/article-form.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { ArticleFormComponent } from './article-form/article-form.component';
     SigninComponent,
     SignupComponent,
     ArticleFormComponent,
-
+    UserComponent,
   ],
   imports: [
     HttpClientModule,
