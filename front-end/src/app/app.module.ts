@@ -12,11 +12,12 @@ import { ArticleComponent } from './article/article.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { ErrorHandlerService } from './error-handler.service';
 import { HttpErrorHandlerService } from './http-error-handler.service';
 import { ArticleFormComponent } from './article-form/article-form.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ArticleFormComponent } from './article-form/article-form.component';
     SigninComponent,
     SignupComponent,
     ArticleFormComponent,
+    UserComponent,
 
   ],
   imports: [
@@ -37,6 +39,7 @@ import { ArticleFormComponent } from './article-form/article-form.component';
     MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: HttpErrorHandlerService, multi: true}, {provide: ErrorHandler, useClass: ErrorHandlerService}],
   bootstrap: [AppComponent]

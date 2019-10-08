@@ -1,0 +1,42 @@
+<mat-card>
+    <form class="bioForm" [formGroup]="boiForm">
+
+        <mat-form-field style="flex: 40%" appearance="outline">
+            <mat-label>Firstname</mat-label>
+            <input matInput formControlName="firstname">
+        </mat-form-field>
+
+        <mat-form-field style="flex: 40%" appearance="outline">
+            <mat-label>Lastname</mat-label>
+            <input matInput formControlName="lastname">
+        </mat-form-field>
+
+        <mat-form-field style="flex: 40%" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field style="flex: 100%" appearance="outline">
+            <mat-label>Languages</mat-label>
+            <mat-chip-list #languagesChipList>
+                <mat-chip *ngFor="let language of languages" removable="true" (click)="onSelectChip(language)"
+                    selectable="true" (removed)="removeLanguage(language)">
+                    {{language}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+
+                <mat-autocomplete #languagesAutocomplete="matAutocomplete" (optionSelected)="onSelectLanguage($event)">
+                    <mat-option *ngFor="let option of languageOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+
+                <input #languagesInput formControlName="languages" [matAutocomplete]="languagesAutocomplete"
+                    [matChipInputFor]="languagesChipList" [matChipInputSeparatorKeyCodes]="seperationKeys"
+                    MatChipAddOnBlur="true" (matChipInputTokenEnd)="addLanguage($event)">
+            </mat-chip-list>
+        </mat-form-field>
+        <button mat-raised-button color="accent" style="flex: 1">Back</button>
+        <button mat-raised-button color="primary" style="flex: 3">Save</button>
+    </form>
+</mat-card>
