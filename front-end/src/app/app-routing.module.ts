@@ -15,6 +15,7 @@ const routes: Routes = [
   {path: 'user/:id', component: UserComponent},
   {path: 'auth/signin', component: SigninComponent},
   {path: 'auth/signup', component: SignupComponent},
+  {path: "user/:id", component: UserComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 

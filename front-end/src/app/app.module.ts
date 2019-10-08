@@ -30,7 +30,6 @@ import { UserComponent } from './user/user.component';
     SignupComponent,
     ArticleFormComponent,
     UserComponent,
-
   ],
   imports: [
     HttpClientModule,
