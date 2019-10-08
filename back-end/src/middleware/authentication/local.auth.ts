@@ -41,55 +41,62 @@ export function login(req: Request, res: Response, next: NextFunction): void {
 export const signUp = [
     validateUser,
     (req: Request, res: Response, next: NextFunction): void => {
-    const user = {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        username: req.body.username,
-        password: req.body.password
-    }
-    User.creatUser(user)
-        .then(doc => {
-            const user = {
-                id: doc._id,
-                firstname: doc.firstname,
-                lastname: doc.lastname
-            }
+        const user = {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            username: req.body.username,
+            password: req.body.password
+        }
+        User.creatUser(user)
+            .then(doc => {
+                const user = {
+                    id: doc._id,
+                    firstname: doc.firstname,
+                    lastname: doc.lastname
+                }
 
-            const userToken = jwt.sign(user, Env.jwtSecret).split(".");
-            const signature = userToken[2];
-            const headerAndPayload = [userToken[0], userToken[1]].join('.');
+                const userToken = jwt.sign(user, Env.jwtSecret).split(".");
+                const signature = userToken[2];
+                const headerAndPayload = [userToken[0], userToken[1]].join('.');
 
-            res.cookie("signature", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
-            res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
-            res.status(201);
-            res.end();
-        })
-        .catch(next)
-}]
+                res.cookie("signature", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
+                res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
+                res.status(201);
+                res.end();
+            })
+            .catch(next)
+    }]
 
 export const update = [
     validateUserUpdate,
     (req: Request, res: Response, next: NextFunction) => {
-    const newUser = req.body;
-    User.findById((<ISUser>req.cookies.user).id, newUser)
-        .then(foundUser => {
-            Object.assign(foundUser, newUser);
-            foundUser.save()
-                .then(doc => {
-                    const user = {
-                        id: doc.id,
-                        firstname: doc.firstname,
-                        lastname: doc.lastname
-                    }
-                    const userToken = jwt.sign(user, Env.jwtSecret).split(".");
-                    const signature = userToken[2];
-                    const headerAndPayload = [userToken[0], userToken[1]].join('.');
+        const newUser = req.body;
+        User.findById((<ISUser>req.cookies.user).id, newUser)
+            .then(foundUser => {
+                Object.assign(foundUser, newUser);
+                foundUser.save()
+                    .then(doc => {
+                        const user = {
+                            id: doc.id,
+                            firstname: doc.firstname,
+                            lastname: doc.lastname
+                        }
+                        const userToken = jwt.sign(user, Env.jwtSecret).split(".");
+                        const signature = userToken[2];
+                        const headerAndPayload = [userToken[0], userToken[1]].join('.');
 
-                    res.cookie("signature", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
-                    res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
-                    res.status(200);
-                    res.end();
-                }).catch(next)
-        })
-        .catch(next);
-}]
+                        res.cookie("signature", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
+                        res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
+                        res.status(200);
+                        res.end();
+                    }).catch(next)
+            })
+            .catch(next);
+    }]
+
+export function logout(req: Request, res: Response, next: NextFunction) {
+    res.cookie("signature", "", { httpOnly: true, expires: new Date(Date.now()), path: "/" });
+    res.cookie("user", "", { path: '/', expires: new Date(Date.now()) });
+    res.status(200);
+    res.end();
+}
