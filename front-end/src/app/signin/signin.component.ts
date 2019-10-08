@@ -13,8 +13,8 @@ import { Subscription } from 'rxjs';
 })
 export class SigninComponent implements OnInit, OnDestroy {
 
-  usernameForm : SigninDataUsername;
-  emailForm : SigninDataEmail;
+  usernameForm: SigninDataUsername;
+  emailForm: SigninDataEmail;
   value = 4;
 
   usernameError = '';
@@ -22,12 +22,12 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   errorSubscribtion: Subscription;
   constructor(private userAuthService: UserAuthenticationService, private router: Router, public globals: Globals) {
-   }
+  }
   ngOnInit() {
-    if(this.userAuthService.getUser() !== undefined) this.router.navigateByUrl("")
+    if (this.userAuthService.getUser() !== undefined) this.router.navigateByUrl("")
     this.errorSubscribtion = this.userAuthService.formErrorsSubject.subscribe(errors => {
-      if(errors.hasOwnProperty("username")) this.usernameError = errors.username;
-      if(errors.hasOwnProperty("password")) this.passwordError = errors.password;
+      if (errors.hasOwnProperty("username")) this.usernameError = errors.username;
+      if (errors.hasOwnProperty("password")) this.passwordError = errors.password;
     })
   }
 
@@ -35,16 +35,16 @@ export class SigninComponent implements OnInit, OnDestroy {
     this.errorSubscribtion.unsubscribe();
   }
 
-   submitUsername(form: SigninDataUsername) {
+  submitUsername(form: SigninDataUsername) {
     this.userAuthService.signInViaUsername(form);
   }
   submitEmail(form: SigninDataEmail) {
     this.userAuthService.signInViaEmail(form);
-    this.router.navigateByUrl('');    
+    this.router.navigateByUrl('');
   }
 
   handleFormErrors(errors: any) {
-    if(errors.hasOwnProperty("username")) this.usernameError = errors.username;
-    if(errors.hasOwnProperty("password")) this.passwordError = errors.password;
+    if (errors.hasOwnProperty("username")) this.usernameError = errors.username;
+    if (errors.hasOwnProperty("password")) this.passwordError = errors.password;
   }
 }

@@ -20,12 +20,17 @@ export class UserAuthenticationService {
 
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) { }
 
+
   getUser(): ISUser {
+    this.updateUser();
+    return this.loggedUser ? {...this.loggedUser} : undefined;
+  }
+
+  updateUser(): void {
     if (this.cookieService.get("user")) {
       this.loggedUser = (jwtDecode(this.cookieService.get("user")));
+      this.loggedUserSubject.next(this.loggedUser);
     }
-    if (this.loggedUser === undefined || Object.keys(this.loggedUser).length === 0) return undefined;
-    return { ...this.loggedUser };
   }
 
   signInViaUsername(form: SigninDataUsername): void {
@@ -33,8 +38,7 @@ export class UserAuthenticationService {
       if (resp.status === ERRORS.InvalidData.status) {
         this.formErrorsSubject.next(resp.body);
       } else if (resp.status === 200) {
-        this.loggedUser = resp.body;
-        this.loggedUserSubject.next(this.loggedUser);
+        this.updateUser();
         location.reload();
       }
     });
@@ -48,9 +52,8 @@ export class UserAuthenticationService {
     this.http.post<any>('http://localhost:3000/api/auth/signup', form, { "observe": "response" }).subscribe(resp => {
       if (resp.status === ERRORS.InvalidData.status) {
         this.formErrorsSubject.next(resp.body);
-      } else if (resp.status === 200) {
-        this.loggedUser = resp.body;
-        this.loggedUserSubject.next(this.loggedUser);
+      } else if (resp.status === 201) {
+        this.updateUser();
         location.reload();
       }
     })

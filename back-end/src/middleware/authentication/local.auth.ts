@@ -20,18 +20,19 @@ export function login(req: Request, res: Response, next: NextFunction): void {
             }
             else {
                 const user = {
-                    id: doc.id,
+                    id: doc._id,
                     firstname: doc.firstname,
                     lastname: doc.lastname
                 }
-                const idJwt = jwt.sign(user, Env.jwtSecret);
-                res.setHeader('Set-Cookie', cookie.serialize('user', idJwt, { path: '/' }));
-                res.setHeader('Content-Type', 'application/json');
-                res.json({
-                    "id": doc.id,
-                    "firstname": doc.firstname,
-                    "lastname": doc.lastname
-                });
+
+                const userToken = jwt.sign(user, Env.jwtSecret).split(".");
+                const signature = userToken[2];
+                const headerAndPayload = [userToken[0], userToken[1]].join('.');
+
+                res.cookie("signautre", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
+                res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
+                res.status(200);
+                res.end();
             }
         })
         .catch(next);
@@ -47,14 +48,19 @@ export function signUp(req: Request, res: Response, next: NextFunction): void {
     User.creatUser(user)
         .then(doc => {
             const user = {
-                id: doc.id,
+                id: doc._id,
                 firstname: doc.firstname,
                 lastname: doc.lastname
             }
-            const idJwt = jwt.sign(user, Env.jwtSecret);
-            res.setHeader('Set-Cookie', cookie.serialize('user', idJwt, { path: '/' }));
-            res.setHeader('Content-Type', 'application/json');
-            res.json(user);
+
+            const userToken = jwt.sign(user, Env.jwtSecret).split(".");
+            const signature = userToken[2];
+            const headerAndPayload = [userToken[0], userToken[1]].join('.');
+
+            res.cookie("signautre", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
+            res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
+            res.status(201);
+            res.end();
         })
         .catch(next)
 }

@@ -1,15 +1,14 @@
 import * as express from "express";
 import * as mongoose from "mongoose";
-import * as jwt from "jsonwebtoken"
 import * as cookieParser from "cookie-parser"
 import * as path from "path"
-import * as cookie from "cookie"
 
 import { Env } from "./config/config"
 import { router } from "./routes/index"
 
 import errorHandler from "./middleware/error.handler"
 import { ERRORS, BaseError } from "shared";
+import { jwtAuth } from "./middleware/authentication/index.auth";
 const expressJsonParser = express.json({ type: 'application/json' });
 const expressUrlencodedParser = express.urlencoded({ extended: false });
 
@@ -29,35 +28,11 @@ db.once('open', () => {
 });
 
 const app = express();
+app.use(cookieParser());
+app.use(jwtAuth);
 app.use(express.static(path.join(__dirname, 'view')))
 app.use(expressJsonParser);
 app.use(expressUrlencodedParser);
-app.use(cookieParser());
-app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if (req.cookies.user) {
-        try {
-            if (jwt.verify(req.cookies.user, Env.jwtSecret)) {
-                req.cookies.user = jwt.decode(req.cookies.user);
-                next();
-            }
-            else {
-                let error: BaseError = ERRORS.InvalidData;
-                error.info = {
-                    'cookie': true
-                }
-                next(error);
-            }
-        } catch (e) {
-            let error: BaseError = ERRORS.InvalidData;
-            error.info = {
-                'cookie': true
-            }
-            next(error);
-        }
-    }
-    else
-        next();
-});
 app.use('/api', router);
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.sendFile(path.join(__dirname, "view/index.html"))

@@ -10,7 +10,6 @@ import { UserAuthenticationService } from './user-authentication.service';
 
 @Injectable()
 export class HttpErrorHandlerService implements HttpInterceptor {
-
   constructor(private notificationService: NotificationService, private router: Router, private authenticationService: UserAuthenticationService) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
@@ -36,6 +35,7 @@ export class HttpErrorHandlerService implements HttpInterceptor {
         break;
       case ERRORS.Unauthorized.status:
         this.notificationService.addNotification(ERRORS.Unauthorized.message);
+        this.authenticationService.logout();
         this.router.navigateByUrl("auth/signin");
         break;
       case ERRORS.Forbidden.status:
@@ -52,8 +52,8 @@ export class HttpErrorHandlerService implements HttpInterceptor {
         this.notificationService.addNotification("Unexpected error: ");
         break;
     }
-    if(observable)
-    return observable;
+    if (observable)
+      return observable;
     else return throwError(new Error());
   }
 
@@ -64,7 +64,7 @@ export class HttpErrorHandlerService implements HttpInterceptor {
     }
     else if (info.hasOwnProperty("objectId")) {
       this.notificationService.addNotification(info.objectId);
-      return throwError(new Error());      
+      return throwError(new Error());
     }
     else {
       return of(new HttpResponse({

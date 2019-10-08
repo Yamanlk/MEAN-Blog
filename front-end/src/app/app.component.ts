@@ -10,15 +10,19 @@ import { NotificationService } from './notification.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(public authService: UserAuthenticationService, private router: Router, private notificationService: NotificationService) {}
-  ngOnInit(): void { 
-    this.user = this.authService.getUser();
-  }
+  
   title = 'JS Bloger';
   user: ISUser;
+  
+  constructor(public authService: UserAuthenticationService, private router: Router, private notificationService: NotificationService) {}
+  ngOnInit(): void { 
+    this.authService.loggedUserSubject.subscribe(user => {
+      this.user = user;
+    }) 
+  }
 
   onCreatButtonClick() {
-    if(this.authService.getUser()) this.router.navigateByUrl('blog/creat');
+    if(this.user) this.router.navigateByUrl('blog/creat');
     else {
       this.router.navigateByUrl('auth/signin');
       this.notificationService.addNotification('Please signin first');

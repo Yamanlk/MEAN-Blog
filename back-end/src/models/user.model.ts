@@ -27,7 +27,7 @@ userSchema.statics.creatUser = function (user: ISUser): Promise<IDocumentUser> {
         User.findOne({ username: user.username })
             .then((doc) => {
                 if (doc) {
-                    let error = ERRORS.InvalidDAta;
+                    let error = ERRORS.InvalidData;
                     error.info = {
                         username: "username is already taken"
                     }
