@@ -1,24 +1,34 @@
 <mat-card>
-    <form class="bioForm" [formGroup]="boiForm">
+    <form class="bioForm" [formGroup]="boiForm" (submit)="submitForm()">
 
         <mat-form-field style="flex: 40%" appearance="outline">
             <mat-label>Firstname</mat-label>
             <input matInput formControlName="firstname">
+            <mat-error *ngIf="firstname.getError('minlength') && !firstname.getError('pattern')">should be at least
+                {{globals.UserValidationGlobals.firstname.minLength}} letters</mat-error>
+            <mat-error *ngIf="firstname.getError('maxlength') && !firstname.getError('pattern')">should be at most
+                {{globals.UserValidationGlobals.firstname.maxLength}} letters</mat-error>
+            <mat-error *ngIf="firstname.getError('pattern')">you have used unpermetted letters</mat-error>
         </mat-form-field>
 
         <mat-form-field style="flex: 40%" appearance="outline">
             <mat-label>Lastname</mat-label>
             <input matInput formControlName="lastname">
+            <mat-error *ngIf="lastname.getError('minlength') && !lastname.getError('pattern')">should be at least
+                {{globals.UserValidationGlobals.lastname.minLength}} letters</mat-error>
+            <mat-error *ngIf="lastname.getError('maxlength') && !firstname.getError('pattern')">should be at most
+                {{globals.UserValidationGlobals.firstname.maxLength}} letters</mat-error>
+            <mat-error *ngIf="lastname.getError('pattern')">you have used unpermetted letters</mat-error>
         </mat-form-field>
 
         <mat-form-field style="flex: 40%" appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email">
+            <input disabled="true" matInput type="email">
         </mat-form-field>
 
         <mat-form-field style="flex: 100%" appearance="outline">
             <mat-label>Languages</mat-label>
-            <mat-chip-list #languagesChipList>
+            <mat-chip-list disabled="true" #languagesChipList>
                 <mat-chip *ngFor="let language of languages" removable="true" (click)="onSelectChip(language)"
                     selectable="true" (removed)="removeLanguage(language)">
                     {{language}}
@@ -31,12 +41,12 @@
                     </mat-option>
                 </mat-autocomplete>
 
-                <input #languagesInput formControlName="languages" [matAutocomplete]="languagesAutocomplete"
-                    [matChipInputFor]="languagesChipList" [matChipInputSeparatorKeyCodes]="seperationKeys"
-                    MatChipAddOnBlur="true" (matChipInputTokenEnd)="addLanguage($event)">
+                <input #languagesInput [matAutocomplete]="languagesAutocomplete" [matChipInputFor]="languagesChipList"
+                    [matChipInputSeparatorKeyCodes]="seperationKeys" MatChipAddOnBlur="true"
+                    (matChipInputTokenEnd)="addLanguage($event)">
             </mat-chip-list>
         </mat-form-field>
         <button mat-raised-button color="accent" style="flex: 1">Back</button>
-        <button mat-raised-button color="primary" style="flex: 3">Save</button>
+        <button mat-raised-button color="primary" style="flex: 3" [disabled]="boiForm.invalid">Save</button>
     </form>
 </mat-card>

@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   
   constructor(public authService: UserAuthenticationService, private router: Router, private notificationService: NotificationService) {}
   ngOnInit(): void { 
+    this.user = this.authService.getUser();
     this.authService.loggedUserSubject.subscribe(user => {
       this.user = user;
     }) 

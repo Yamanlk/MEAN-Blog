@@ -3,8 +3,8 @@ import { ISUser, UserValidator, ERRORS } from 'shared'
 import { IDocumentArticle } from './article.model';
 
 export interface IDocumentUser extends ISUser, mongoose.Document {
-    s: IDocumentArticle[] | mongoose.Types.ObjectId;
-    isLiked(Id: string): boolean;
+    articles: IDocumentArticle[] | mongoose.Types.ObjectId;
+
 }
 
 export interface IModelUser extends mongoose.Model<IDocumentUser> {
@@ -45,7 +45,9 @@ userSchema.statics.creatUser = function (user: ISUser): Promise<IDocumentUser> {
 userSchema.statics.findUserById = function (userId: string): Promise<IDocumentUser> {
     return new Promise((resolve, reject) => {
         User.findById(userId)
-            .then((doc) => {
+        .select(["_id", "firstname", "lastname"])
+        .exec()
+        .then((doc) => {
                 if (!doc) reject(ERRORS.NotFound);
                 else resolve(doc);
             })
@@ -62,8 +64,4 @@ userSchema.statics.findUserByUsername = function (username: string): Promise<IDo
             .catch(reject);
     });
 };
-//methods
-userSchema.methods.isLiked = function (Id: string): boolean {
-    return this.model("User").liked_s.includes(mongoose.Types.ObjectId(Id));
-}
 export const User = mongoose.model<IDocumentUser, IModelUser>('User', userSchema);

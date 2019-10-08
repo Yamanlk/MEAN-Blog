@@ -22,11 +22,20 @@ export class UserAuthenticationService {
 
 
   getUser(): ISUser {
-    this.updateUser();
-    return this.loggedUser ? { ...this.loggedUser } : undefined;
+    this.updateLoggedUser();
+    return this.loggedUser ? {...this.loggedUser} : undefined;
   }
 
-  updateUser(): void {
+  updateUser(user: ISUser) {
+    this.http.post("http://localhost:3000/api/auth/update", user, {observe: "response"}).subscribe(resp => {
+      if(resp.status === 200) {
+        this.loggedUser = resp.body;
+        this.updateLoggedUser();
+      }
+    })
+  }
+
+  updateLoggedUser(): void {
     if (this.cookieService.get("user")) {
       this.loggedUser = (jwtDecode(this.cookieService.get("user")));
       this.loggedUserSubject.next(this.loggedUser);
@@ -38,7 +47,7 @@ export class UserAuthenticationService {
       if (resp.status === ERRORS.InvalidData.status) {
         this.formErrorsSubject.next(resp.body);
       } else if (resp.status === 200) {
-        this.updateUser();
+        this.updateLoggedUser();
         location.reload();
       }
     });
@@ -53,7 +62,7 @@ export class UserAuthenticationService {
       if (resp.status === ERRORS.InvalidData.status) {
         this.formErrorsSubject.next(resp.body);
       } else if (resp.status === 201) {
-        this.updateUser();
+        this.updateLoggedUser();
         location.reload();
       }
     })

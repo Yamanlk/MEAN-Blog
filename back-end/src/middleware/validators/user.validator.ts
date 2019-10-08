@@ -21,7 +21,7 @@ export function validateUser(req: Request, res: Response, next: NextFunction): v
     else next();
 };
 
-export function validateAuthorUpdate(req: Request, res: Response, next: NextFunction) {
+export function validateUserUpdate(req: Request, res: Response, next: NextFunction) {
     const result = userSchema.validate(req.body, { presence: "optional" });
     if (result.error) {
         let error = ERRORS.InvalidData;

@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken"
-import { BaseError, ERRORS } from "shared"
+import { BaseError, ERRORS} from "shared"
 import { Env } from "../../config/config"
 
 export function jwtAuth(req: Request, res: Response, next: NextFunction) {
-
     if (!req.cookies.signature) {
         next();
     } else {
