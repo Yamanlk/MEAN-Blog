@@ -4,6 +4,9 @@ import { ENTER, COMMA } from "@angular/cdk/keycodes"
 import { MatChipInputEvent, MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import {Categories, ISUser} from "shared"
+import { UserAuthenticationService } from '../user-authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -15,11 +18,13 @@ export class UserComponent implements OnInit {
   seperationKeys: number[] = [ENTER, COMMA]
   languages: string[] = [];
   languageOptions: Observable<string[]>;
-  allLanguages = ["Nodejs", "Express", "Angular", "React"];
+  allLanguages = Categories;
 
   @ViewChild("languagesInput", { static: false }) languageInput: ElementRef<HTMLInputElement>;
   @ViewChild("languagesAutocomplete", { static: false }) languagesAutocomplete: MatAutocomplete;
 
+  
+  user:ISUser;
   boiForm = new FormGroup({
     firstname: new FormControl(''),
     lastname: new FormControl(''),
@@ -27,9 +32,17 @@ export class UserComponent implements OnInit {
     languages: new FormControl(this.languages)
   })
 
-  constructor() { }
+  constructor(private authentecationService: UserAuthenticationService, private router: Router) { }
 
   ngOnInit() {
+    this.user = this.authentecationService.getUser();
+    if(!this.user) { this.router.navigateByUrl(""); }
+    this.boiForm.setValue({
+      firstname: this.user.firstname,
+      lastname: this.user.lastname,
+      email: "",
+      languages: []
+    })
     this.languageOptions = this.boiForm.controls.languages.valueChanges.pipe(
       startWith(null),
       map(value => {
