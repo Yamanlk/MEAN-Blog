@@ -29,7 +29,7 @@ export function login(req: Request, res: Response, next: NextFunction): void {
                 const signature = userToken[2];
                 const headerAndPayload = [userToken[0], userToken[1]].join('.');
 
-                res.cookie("signautre", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
+                res.cookie("signature", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
                 res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
                 res.status(200);
                 res.end();
@@ -57,10 +57,17 @@ export function signUp(req: Request, res: Response, next: NextFunction): void {
             const signature = userToken[2];
             const headerAndPayload = [userToken[0], userToken[1]].join('.');
 
-            res.cookie("signautre", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
+            res.cookie("signature", signature, { httpOnly: true, maxAge: 60 * 60 * 1000, path: "/" });
             res.cookie("user", headerAndPayload, { path: '/', maxAge: 60 * 60 * 1000 });
             res.status(201);
             res.end();
         })
         .catch(next)
+}
+
+export function logout(req: Request, res: Response, next: NextFunction) {
+    res.cookie("signature", "", {path: "/", httpOnly: true, expires: new Date(Date.now())});
+    res.cookie("user", "", {path: "/", expires: new Date(Date.now())})
+    res.status(200);
+    res.end();
 }

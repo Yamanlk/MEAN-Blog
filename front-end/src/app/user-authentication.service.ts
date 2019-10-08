@@ -23,7 +23,7 @@ export class UserAuthenticationService {
 
   getUser(): ISUser {
     this.updateUser();
-    return this.loggedUser ? {...this.loggedUser} : undefined;
+    return this.loggedUser ? { ...this.loggedUser } : undefined;
   }
 
   updateUser(): void {
@@ -64,9 +64,13 @@ export class UserAuthenticationService {
   }
 
   logout() {
-    this.cookieService.delete("user", "/", "localhost");
-    this.loggedUser = undefined;
-    this.loggedUserSubject.next(this.loggedUser);
-    this.router.navigateByUrl("auth/signin");
+    this.http.get("http://localhost:3000/api/auth/logout", { observe: "response" }).subscribe(resp => {
+      if (resp.status === 200) {
+        this.cookieService.delete("user", "/", "localhost");
+        this.loggedUser = undefined;
+        this.loggedUserSubject.next(this.loggedUser);
+        this.router.navigateByUrl("auth/signin");
+      }
+    })
   }
 }
