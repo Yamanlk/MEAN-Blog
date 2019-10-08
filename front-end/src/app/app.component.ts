@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
   onActive(event) {
     if(event instanceof BlogComponent)
     this.blog = event;
+    else this.blog = undefined;
   }
 
   onScroll(matNavContent: MatSidenavContent) {
