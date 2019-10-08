@@ -1,8 +1,8 @@
-.bioForm {
+.bio-form {
     display: flex;
     flex-flow: row wrap;
 }
 
-.bioForm > * {
+.bio-form > * {
     margin: 0px 10px;
 }

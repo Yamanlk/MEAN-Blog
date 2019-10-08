@@ -45,7 +45,7 @@ export class BlogService {
 
   }
 
-  public creatArticle(article: ISArticle) {
+  public creatArticle(article: ISArticle | any) {
     this.http.post("http://localhost:3000/api/article/creat", article, {observe: "response"}).subscribe(resp => {
       if(resp.status === 201) {
         this.router.navigateByUrl("/");

@@ -1,5 +1,5 @@
 <mat-card>
-    <form class="bioForm" [formGroup]="boiForm" (submit)="submitForm()">
+    <form class="bio-form" [formGroup]="boiForm" (submit)="submitForm()">
 
         <mat-form-field style="flex: 40%" appearance="outline">
             <mat-label>Firstname</mat-label>
@@ -46,7 +46,7 @@
                     (matChipInputTokenEnd)="addLanguage($event)">
             </mat-chip-list>
         </mat-form-field>
-        <button mat-raised-button color="accent" style="flex: 1">Back</button>
-        <button mat-raised-button color="primary" style="flex: 3" [disabled]="boiForm.invalid">Save</button>
+        <button mat-raised-button color="accent" style="flex: 1" type="button" onclick="window.history.back()">Back</button>
+        <button mat-raised-button color="primary" style="flex: 3" type="submit" [disabled]="boiForm.invalid">Save</button>
     </form>
 </mat-card>

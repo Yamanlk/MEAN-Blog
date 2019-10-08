@@ -45,8 +45,8 @@
         </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
+    <mat-sidenav-content #matnavcontent (scroll)="onScroll(matnavcontent)">
+      <router-outlet (activate)="onActive($event)"></router-outlet>
       <div style="margin-top: auto; height: auto;"></div>
     </mat-sidenav-content>
   </mat-sidenav-container>
