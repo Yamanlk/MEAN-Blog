@@ -14,8 +14,6 @@ export function jwtAuth(req: Request, res: Response, next: NextFunction) {
         try {
             if (jwt.verify(userToken, Env.jwtSecret)) {
                 req.cookies.user = jwt.decode(userToken);
-                res.cookie("signature", signature, { maxAge: 60 * 60 * 1000, httpOnly: true, path: "/" });
-                res.cookie("user", userpayload, { path: '/', maxAge: 60 * 60 * 1000 });
                 next();
             } else {
                 res.cookie("signature", "", { expires: new Date(Date.now()), httpOnly: true, path: "/" })

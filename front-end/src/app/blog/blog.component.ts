@@ -34,7 +34,7 @@ export class BlogComponent implements OnInit, OnDestroy {
         this.isEmpty = false;
       }
     });
-    this.blogService.getArticles(this.from, this.count);
+    this.onLoadMoreArticleButtonClick();
   }
 
   ngOnDestroy(): void {

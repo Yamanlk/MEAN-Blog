@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ENTER, COMMA } from "@angular/cdk/keycodes"
 import { MatChipInputEvent, MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Categories, ISUser } from "shared"
 import { UserAuthenticationService } from '../user-authentication.service';
@@ -14,7 +14,7 @@ import { Globals } from '../globals.service';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
 
   seperationKeys: number[] = [ENTER, COMMA]
   languages: string[] = [];
@@ -26,10 +26,11 @@ export class UserComponent implements OnInit {
 
 
   user: ISUser;
+  userSubscription: Subscription;
   boiForm = new FormGroup({
     firstname: new FormControl(''),
     lastname: new FormControl(''),
-    //sould be added in user schema in mongodb
+    //should be added in user schema in mongodb
     // email: new FormControl(''),
     // languages: new FormControl(this.languages)
   })
@@ -59,6 +60,9 @@ export class UserComponent implements OnInit {
       this.globals.UserValidationGlobals.lastname.required ? Validators.required: undefined
     ])
 
+    this.userSubscription = this.authentecationService.loggedUserSubject.subscribe(user => {
+      this.user = user
+    })
     this.user = this.authentecationService.getUser();
     if (!this.user) { this.router.navigateByUrl(""); }
     this.boiForm.setValue({
@@ -74,6 +78,11 @@ export class UserComponent implements OnInit {
     //     return value ? this._filterLanguageOptions(value) : [...(this.allLanguages.filter(language => this.languages.includes(language) ? null : language))]
     //   })
     // )
+  }
+
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 
   addLanguage(event: MatChipInputEvent): void {
